@@ -1,1 +1,1 @@
-# python_automation
+# Repository for Python automation training [13.10.2017]
