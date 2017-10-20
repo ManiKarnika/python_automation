@@ -4,13 +4,6 @@ import unittest
 from user import User
 
 
-def is_alert_present(wd):
-    try:
-        wd.switch_to_alert().text
-        return True
-    except:
-        return False
-
 class test_add_user(unittest.TestCase):
     def setUp(self):
         self.wd = WebDriver()
@@ -18,17 +11,13 @@ class test_add_user(unittest.TestCase):
     
     def test_test_add_user(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
-        self.open_user_page(wd)
         self.init_users_creation(wd, User (name="name", last_name="last_name", address="address", phone="+15031234567", e_mail="sc@sc.com"))
         self.logout(wd)
 
     def test_test_add_empty_user(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
-        self.open_user_page(wd)
         self.init_users_creation(wd, User (name="", last_name="", address="", phone="", e_mail=""))
         self.logout(wd)
 
@@ -36,6 +25,7 @@ class test_add_user(unittest.TestCase):
         wd.find_element_by_link_text("Logout").click()
 
     def init_users_creation(self, wd, user):
+        self.open_user_page(wd)
         #init users creation
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -58,6 +48,7 @@ class test_add_user(unittest.TestCase):
         wd.find_element_by_link_text("add new").click()
 
     def login(self, wd, username, password):
+        self.open_home_page(wd)
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
