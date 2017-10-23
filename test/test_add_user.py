@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
 import unittest
-from user import User
+
+from selenium.webdriver.firefox.webdriver import WebDriver
+
+from model.user import User
 
 
 class test_add_user(unittest.TestCase):
