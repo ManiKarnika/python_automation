@@ -1,4 +1,4 @@
-class User:
+class Contact:
 
     def __init__(self, name, last_name, address, phone, e_mail):
         self.name = name
