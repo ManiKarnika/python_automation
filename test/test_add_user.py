@@ -13,12 +13,12 @@ def app(request):
 
 def test_test_add_user(app):
     app.session.login(username="admin", password="secret")
-    app.init_users_creation(User (name="name", last_name="last_name", address="address", phone="+15031234567", e_mail="sc@sc.com"))
+    app.user.create(User (name="name", last_name="last_name", address="address", phone="+15031234567", e_mail="sc@sc.com"))
     app.session.logout()
 
 def test_test_add_empty_user(app):
     app.session.login(username="admin", password="secret")
-    app.init_users_creation(User (name="", last_name="", address="", phone="", e_mail=""))
+    app.user.create(User (name="", last_name="", address="", phone="", e_mail=""))
     app.session.logout()
 
 
