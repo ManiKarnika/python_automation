@@ -1,67 +1,23 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
-import unittest
+import pytest
 from user import User
+from application import Application
 
 
-class test_add_user(unittest.TestCase):
-    def setUp(self):
-        self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
-    
-    def test_test_add_user(self):
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.init_users_creation(wd, User (name="name", last_name="last_name", address="address", phone="+15031234567", e_mail="sc@sc.com"))
-        self.logout(wd)
+@pytest.fixture()
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
-    def test_test_add_empty_user(self):
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.init_users_creation(wd, User (name="", last_name="", address="", phone="", e_mail=""))
-        self.logout(wd)
+def test_test_add_user(app):
+    app.login(username="admin", password="secret")
+    app.init_users_creation(User (name="name", last_name="last_name", address="address", phone="+15031234567", e_mail="sc@sc.com"))
+    app.logout()
 
-    def logout(self, wd):
-        wd.find_element_by_link_text("Logout").click()
+def test_test_add_empty_user(app):
+    app.login(username="admin", password="secret")
+    app.init_users_creation(User (name="", last_name="", address="", phone="", e_mail=""))
+    app.logout()
 
-    def init_users_creation(self, wd, user):
-        self.open_user_page(wd)
-        #init users creation
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(user.name)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(user.last_name)
-        wd.find_element_by_name("address").click()
-        wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(user.address)
-        wd.find_element_by_name("home").click()
-        wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys(user.phone)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(user.e_mail)
-        wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
-    def open_user_page(self, wd):
-        wd.find_element_by_link_text("add new").click()
-
-    def login(self, wd, username, password):
-        self.open_home_page(wd)
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//form[@id='LoginForm']/input[3]").click()
-
-    def open_home_page(self, wd):
-        wd.get("http://localhost/addressbook/index.php")
-
-    def tearDown(self):
-        self.wd.quit()
-
-if __name__ == '__main__':
-    unittest.main()
