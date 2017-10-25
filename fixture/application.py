@@ -15,8 +15,8 @@ class Application:
         self.user = UserHelper(self)
 
     def open_home_page(self):
-        wd = self.wd
-        wd.get("http://localhost/addressbook/index.php")
+       wd = self.wd
+       wd.get("http://localhost/addressbook/index.php")
 
     def destroy(self):
         self.wd.quit()
