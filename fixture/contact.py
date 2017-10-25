@@ -1,3 +1,5 @@
+import time
+
 class UserHelper:
 
     def __init__(self, app):
@@ -27,3 +29,11 @@ class UserHelper:
     def open_user_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
+
+    def delete_first_contact(self):
+        wd = self.app.wd
+        # submit first contact's deletion
+        wd.find_element_by_name("selected[]").click()
+        wd.find_element_by_xpath('//div/div[4]/form[2]/div[2]/input').click()
+        wd.switch_to_alert().accept()
+        time.sleep(1)
