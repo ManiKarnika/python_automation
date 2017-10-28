@@ -40,14 +40,9 @@ class UserHelper:
 
     def modify_first_contact(self, user):
         wd = self.app.wd
-        # wd.find_element_by_name("selected[]").click()
-        # wd.find_element_by_partial_link_text("edit.php?id=35").click()
-        if not wd.find_element_by_id("26").is_selected():
-            wd.find_element_by_id("26").click()
-        wd.find_element_by_name("selected[]").click()
-        time.sleep(10)
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
-
+        self.app.open_home_page()
+        self.choose_contact()
+        self.go_to_contact_modification_page()
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(user.name)
@@ -64,5 +59,13 @@ class UserHelper:
         wd.find_element_by_name("email").clear()
         wd.find_element_by_name("email").send_keys(user.e_mail)
         wd.find_element_by_name("update").click()
-        time.sleep(5)
+        time.sleep(5) # to wait for refresh  page
+
+    def go_to_contact_modification_page(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+
+    def choose_contact(self):
+        wd = self.app.wd
+        wd.find_element_by_name("selected[]").click()
 
