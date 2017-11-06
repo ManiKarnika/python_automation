@@ -9,21 +9,7 @@ class UserHelper:
         wd = self.app.wd
         self.open_user_page()
         #init users creation
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(user.name)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(user.last_name)
-        wd.find_element_by_name("address").click()
-        wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(user.address)
-        wd.find_element_by_name("home").click()
-        wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys(user.phone)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(user.e_mail)
+        self.fill_contact_form(user)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
 
     def open_user_page(self):
@@ -43,23 +29,24 @@ class UserHelper:
         self.app.open_home_page()
         self.choose_contact()
         self.go_to_contact_modification_page()
-        wd.find_element_by_name("firstname").click()
-        wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(user.name)
-        wd.find_element_by_name("lastname").click()
-        wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(user.last_name)
-        wd.find_element_by_name("address").click()
-        wd.find_element_by_name("address").clear()
-        wd.find_element_by_name("address").send_keys(user.address)
-        wd.find_element_by_name("home").click()
-        wd.find_element_by_name("home").clear()
-        wd.find_element_by_name("home").send_keys(user.phone)
-        wd.find_element_by_name("email").click()
-        wd.find_element_by_name("email").clear()
-        wd.find_element_by_name("email").send_keys(user.e_mail)
+        self.fill_contact_form(user)
         wd.find_element_by_name("update").click()
-        time.sleep(5) # to wait for refresh  page
+        self.app.open_home_page()
+
+    def fill_contact_form(self, user):
+        wd = self.app.wd
+        self.change_field_value("firstname", user.name)
+        self.change_field_value("lastname", user.last_name)
+        self.change_field_value("address", user.address)
+        self.change_field_value("home", user.phone) #  search for home phone
+        self.change_field_value("email", user.e_mail)
+
+    def change_field_value(self, field_name, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            wd.find_element_by_name(field_name).clear()
+            wd.find_element_by_name(field_name).send_keys(text)
 
     def go_to_contact_modification_page(self):
         wd = self.app.wd
