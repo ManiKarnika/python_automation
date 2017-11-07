@@ -18,6 +18,7 @@ class UserHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
+        self.app.open_home_page()
         # submit first contact's deletion
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath('//div/div[4]/form[2]/div[2]/input').click()
