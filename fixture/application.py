@@ -14,9 +14,16 @@ class Application:
         self.group = GroupHelper(self)
         self.user = UserHelper(self)
 
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
+
     def open_home_page(self):
-       wd = self.wd
-       wd.get("http://localhost/addressbook/index.php")
+        wd = self.wd
+        wd.get("http://localhost/addressbook/index.php")
 
     def destroy(self):
         self.wd.quit()
