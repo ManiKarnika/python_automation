@@ -57,3 +57,8 @@ class UserHelper:
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
+    def count(self):
+        wd = self.app.wd
+        self.app.open_home_page()  # home & contacts' page are the same one
+        return len(wd.find_elements_by_name("selected[]"))
+
