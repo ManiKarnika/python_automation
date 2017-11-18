@@ -1,4 +1,5 @@
 import time
+from model.contact import Contact
 
 class UserHelper:
 
@@ -63,3 +64,14 @@ class UserHelper:
         self.app.open_home_page()  # home & contacts' page are the same one
         return len(wd.find_elements_by_name("selected[]"))
 
+    def get_contacts_list(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        contacts = []
+        for element in wd.find_elements_by_name('entry'):
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            td_s = element.find_elements_by_xpath(".//td")
+            name = td_s[2].text
+            last_name = td_s[1].text
+            contacts.append(Contact(name=name, last_name=last_name, id=id))
+        return contacts
