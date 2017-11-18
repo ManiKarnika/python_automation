@@ -12,6 +12,7 @@ class UserHelper:
         #init users creation
         self.fill_contact_form(user)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.contacts_cash = None
 
     def open_user_page(self):
         wd = self.app.wd
@@ -25,6 +26,7 @@ class UserHelper:
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath('//div/div[4]/form[2]/div[2]/input').click()
         wd.switch_to_alert().accept()
+        self.contacts_cash = None
         time.sleep(1)
 
     def modify_first_contact(self, user):
@@ -35,6 +37,7 @@ class UserHelper:
         self.fill_contact_form(user)
         wd.find_element_by_name("update").click()
         self.app.open_home_page()
+        self.contacts_cash = None
 
     def fill_contact_form(self, user):
         wd = self.app.wd
@@ -64,14 +67,17 @@ class UserHelper:
         self.app.open_home_page()  # home & contacts' page are the same one
         return len(wd.find_elements_by_name("selected[]"))
 
+    contacts_cash = None
+
     def get_contacts_list(self):
-        wd = self.app.wd
-        self.app.open_home_page()
-        contacts = []
-        for element in wd.find_elements_by_name('entry'):
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            td_s = element.find_elements_by_xpath(".//td")
-            name = td_s[2].text
-            last_name = td_s[1].text
-            contacts.append(Contact(name=name, last_name=last_name, id=id))
-        return contacts
+        if self.contacts_cash is None:
+            wd = self.app.wd
+            self.app.open_home_page()
+            self.contacts_cash = []
+            for element in wd.find_elements_by_name('entry'):
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                td_s = element.find_elements_by_xpath(".//td")
+                name = td_s[2].text
+                last_name = td_s[1].text
+                self.contacts_cash.append(Contact(name=name, last_name=last_name, id=id))
+        return self.contacts_cash
