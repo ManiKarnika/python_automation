@@ -20,20 +20,26 @@ class UserHelper:
             wd.find_element_by_link_text("add new").click()
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
         # submit first contact's deletion
-        wd.find_element_by_name("selected[]").click()
+        self.choose_contact_by_index(index)
         wd.find_element_by_xpath('//div/div[4]/form[2]/div[2]/input').click()
         wd.switch_to_alert().accept()
         self.contacts_cash = None
         time.sleep(1)
 
     def modify_first_contact(self, user):
+        self.modify_contact_by_index(0, user)
+
+    def modify_contact_by_index(self, index, user):
         wd = self.app.wd
         self.app.open_home_page()
-        self.choose_contact()
-        self.go_to_contact_modification_page()
+        self.choose_contact_by_index(index)
+        self.go_to_contact_modification_page(index)
         self.fill_contact_form(user)
         wd.find_element_by_name("update").click()
         self.app.open_home_page()
@@ -54,13 +60,13 @@ class UserHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
-    def go_to_contact_modification_page(self):
+    def go_to_contact_modification_page(self, index):
         wd = self.app.wd
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img").click()
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr["+str(index)+"]/td[8]/a/img").click()
 
-    def choose_contact(self):
+    def choose_contact_by_index(self, index):
         wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def count(self):
         wd = self.app.wd

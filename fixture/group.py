@@ -23,21 +23,27 @@ class GroupHelper:
         self.groups_cash = None
 
     def delete_first_group(self):
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
         self.open_group_page()
         # submit deletion
-        self.select_first_group()
+        self.select_group_by_index(index)
         wd.find_element_by_name("delete").click()
         # return to group
         self.return_to_groups_page()
         self.groups_cash = None
 
     def modify_first_group(self, new_group_data):
+        self.modify_group_by_index(0, new_group_data)
+
+    def modify_group_by_index(self, index,  new_group_data):
         wd = self.app.wd
         self.app.open_home_page()
         self.open_group_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         wd.find_element_by_name("edit").click()
         self.fill_group_form(new_group_data)
         wd.find_element_by_name("update").click()
@@ -45,7 +51,6 @@ class GroupHelper:
         self.groups_cash = None
 
     def fill_group_form(self, group):
-        wd = self.app.wd
         self.change_field_value("group_name", group.name)
         self.change_field_value("group_header", group.header)
         self.change_field_value("group_footer", group.footer)
@@ -58,8 +63,11 @@ class GroupHelper:
             wd.find_element_by_name(field_name).send_keys(text)
 
     def select_first_group(self):
+        self.delete_group_by_index(0)
+
+    def select_group_by_index(self, index):
         wd = self.app.wd
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def open_group_page(self):
         wd = self.app.wd
