@@ -3,17 +3,21 @@ from sys import maxsize
 
 class Contact:
 
-    def __init__(self, name=None, last_name=None, address=None, phone=None, e_mail=None, id=None):
-        self.name = name
-        self.last_name = last_name
+    def __init__(self, firstname=None, lastname=None, address=None, homephone=None, mobilephone=None, workphone=None, secondaryphone=None, e_mail=None, id=None, all_phones_from_home_page=None):
+        self.firstname = firstname
+        self.lastname = lastname
         self.address = address
-        self.phone = phone
+        self.homephone = homephone
+        self.mobilephone = mobilephone
+        self.workphone = workphone
+        self.secondaryphone = secondaryphone
         self.e_mail = e_mail
         self.id = id
+        self.all_phones_from_home_page = all_phones_from_home_page
 
     def __repr__(self):
         #  to format output in console log
-        return "%s:%s:%s" % (self.id, self.name, self.last_name)
+        return "%s:%s:%s" % (self.id, self.firstname, self.lastname)
 
     def id_or_max(self):
         if self.id:
@@ -22,4 +26,4 @@ class Contact:
             return maxsize
 
     def __eq__(self, other):
-        return (self.id is None or other.id is None or self.id == other.id) and (self.name == other.name and self.last_name == other.last_name)
+        return (self.id is None or other.id is None or self.id == other.id) and (self.firstname == other.firstname and self.lastname == other.lastname)

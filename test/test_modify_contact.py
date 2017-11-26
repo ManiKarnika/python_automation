@@ -5,10 +5,11 @@ from random import randrange
 
 def test_modify_some_contact(app):
     if app.user.count() == 0:
-        app.user.create(Contact(name="deletion_test"))
+        app.user.create(Contact(firstname="modification_test"))
     old_contacts = app.user.get_contacts_list()
     index = randrange(len(old_contacts))
-    contact = Contact(name="name_mod", last_name="last_name_mod", address="address_mod", phone="+150312", e_mail="sc_mod@sc.com")
+    contact = Contact(firstname="name_mod", lastname="last_name_mod", address="address_mod",
+                      homephone="+150312", e_mail="sc_mod@sc.com")
     contact.id = old_contacts[index].id
     #  main
     app.user.modify_contact_by_index(index, contact)

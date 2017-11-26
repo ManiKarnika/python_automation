@@ -1,4 +1,5 @@
 import time
+import re
 from model.contact import Contact
 
 class UserHelper:
@@ -47,10 +48,13 @@ class UserHelper:
 
     def fill_contact_form(self, user):
         wd = self.app.wd
-        self.change_field_value("firstname", user.name)
-        self.change_field_value("lastname", user.last_name)
+        self.change_field_value("firstname", user.firstname)
+        self.change_field_value("lastname", user.lastname)
         self.change_field_value("address", user.address)
-        self.change_field_value("home", user.phone) #  search for home phone
+        self.change_field_value("home", user.homephone) #  search for home phone
+        self.change_field_value("mobile", user.mobilephone)
+        self.change_field_value("work", user.workphone)
+        self.change_field_value("fax", user.secondaryphone)
         self.change_field_value("email", user.e_mail)
 
     def change_field_value(self, field_name, text):
@@ -62,11 +66,21 @@ class UserHelper:
 
     def go_to_contact_modification_page(self, index):
         wd = self.app.wd
-        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr["+str(index)+"]/td[8]/a/img").click()
+        row = wd.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[7]
+        cell.find_element_by_tag_name("a").click()
 
     def choose_contact_by_index(self, index):
         wd = self.app.wd
+        self.app.open_home_page()
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def open_contact_view_by_index(self, index):
+        wd = self.app.wd
+        self.app.open_home_page()
+        row = wd.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[6]
+        cell.find_element_by_tag_name("a").click()
 
     def count(self):
         wd = self.app.wd
@@ -82,8 +96,38 @@ class UserHelper:
             self.contacts_cash = []
             for element in wd.find_elements_by_name('entry'):
                 id = element.find_element_by_name("selected[]").get_attribute("value")
-                td_s = element.find_elements_by_xpath(".//td")
-                name = td_s[2].text
-                last_name = td_s[1].text
-                self.contacts_cash.append(Contact(name=name, last_name=last_name, id=id))
+                cells = element.find_elements_by_xpath(".//td")
+                name = cells[2].text
+                last_name = cells[1].text
+                all_phones = cells[5].text
+                self.contacts_cash.append(Contact(firstname=name, lastname=last_name, id=id,
+                                                  all_phones_from_home_page=all_phones))
         return self.contacts_cash
+
+    def get_contact_from_edit_page(self, index):
+        wd = self.app.wd
+        self.choose_contact_by_index(index)
+        self.go_to_contact_modification_page(index)
+        firstname = wd.find_element_by_name("firstname").get_attribute("value")
+        lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        secondaryphone = wd.find_element_by_name("fax").get_attribute("value")
+        # return object
+        return Contact(firstname=firstname, lastname=lastname, homephone=homephone, mobilephone=mobilephone,
+                 workphone=workphone, secondaryphone=secondaryphone, id=id)
+
+    def get_contact_from_view_page(self, index):
+        wd = self.app.wd
+
+        self.open_contact_view_by_index(index)
+        text = wd.find_element_by_id("content").text
+        homephone = re.search("H: (.*)", text).group(1)
+        mobilephone = re.search("M: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        secondaryphone = re.search("F: (.*)", text).group(1)
+        return Contact(homephone=homephone, mobilephone=mobilephone,
+                       workphone=workphone, secondaryphone=secondaryphone)
+
