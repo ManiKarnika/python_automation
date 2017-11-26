@@ -100,8 +100,12 @@ class UserHelper:
                 name = cells[2].text
                 last_name = cells[1].text
                 all_phones = cells[5].text
+                all_emails = cells[4].text
+                address = cells[3].text
                 self.contacts_cash.append(Contact(firstname=name, lastname=last_name, id=id,
-                                                  all_phones_from_home_page=all_phones))
+                                                  all_phones_from_home_page=all_phones,
+                                                  all_emails_from_home_page=all_emails,
+                                                  address=address))
         return self.contacts_cash
 
     def get_contact_from_edit_page(self, index):
@@ -115,9 +119,13 @@ class UserHelper:
         workphone = wd.find_element_by_name("work").get_attribute("value")
         mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         secondaryphone = wd.find_element_by_name("fax").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
+        e_mail = wd.find_element_by_name("email").get_attribute("value")
+        e_mail2 = wd.find_element_by_name("email2").get_attribute("value")
+        e_mail3 = wd.find_element_by_name("email3").get_attribute("value")
         # return object
         return Contact(firstname=firstname, lastname=lastname, homephone=homephone, mobilephone=mobilephone,
-                 workphone=workphone, secondaryphone=secondaryphone, id=id)
+                 workphone=workphone, secondaryphone=secondaryphone, id=id, address=address, e_mail=e_mail, e_mail2=e_mail2, e_mail3=e_mail3)
 
     def get_contact_from_view_page(self, index):
         wd = self.app.wd
