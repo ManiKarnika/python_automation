@@ -1,10 +1,31 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
+import pytest
+import string
+import random
 
 
-def test_add_contact(app):
+def random_string(prefix, maxlen):
+    symbols = string.ascii_letters + string.digits + " "*10 + string.punctuation
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
+
+def random_number(maxlen):
+    return "+" + "".join([random.choice(string.digits) for i in range(random.randrange(maxlen))])
+
+def random_email(maxlen):
+    symbols = string.ascii_letters + string.digits
+    return "e" + "".join([random.choice(symbols) for i in range(random.randrange(maxlen / 2))]) + "@" + "".join([random.choice(symbols) for i in range(random.randrange(maxlen / 2))]) + ".com"
+
+testdata = [
+    Contact(firstname=name, lastname=lastname, address=random_string("", 20), homephone=random_number(10), mobilephone=random_number(10), workphone=random_number(10), secondaryphone=random_number(10), e_mail=random_email(8))
+    for name in ["", random_string("name", 7)]
+    for lastname in [random_string("last", 10)]*3
+]
+
+
+@pytest.mark.parametrize("contact", testdata, ids=[repr(y) for y in testdata])
+def test_add_contact(app, contact):
     old_contacts = app.user.get_contacts_list()
-    contact = Contact(firstname="name", lastname="last_name", address="address", homephone="+15031234567", mobilephone="+17866876876", workphone="+159875757865", secondaryphone="+12546576578", e_mail="sc@sc.com")
     app.user.create(contact)
     assert len(old_contacts) + 1 == app.user.count()
     new_contacts = app.user.get_contacts_list()
@@ -12,11 +33,3 @@ def test_add_contact(app):
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
 
-# def test_add_empty_contact(app):
-#     old_contacts = app.user.get_contacts_list()
-#     contact = Contact(name="", last_name="", address="", phone="", e_mail="")
-#     app.user.create(contact)
-#     new_contacts = app.user.get_contacts_list()
-#     assert len(old_contacts) + 1 == len(new_contacts)
-#     old_contacts.append(contact)
-#     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)

@@ -20,7 +20,7 @@ class Contact:
 
     def __repr__(self):
         #  to format output in console log
-        return "%s:%s:%s" % (self.id, self.firstname, self.lastname)
+        return "%s:%s:%s:%s:%s:%s" % (self.id, self.firstname, self.lastname, self.homephone, self.workphone,  self.e_mail)
 
     def id_or_max(self):
         if self.id:
