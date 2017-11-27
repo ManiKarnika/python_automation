@@ -2,7 +2,7 @@ from random import randrange
 import re
 
 
-def test_contact_parameters(app):
+def test_contact_full_name_verification(app):
     contacts = app.user.get_contacts_list()
     index = randrange(len(contacts))
     contact_from_home_page = app.user.get_contacts_list()[index]

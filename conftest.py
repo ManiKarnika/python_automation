@@ -1,19 +1,24 @@
 import pytest
 from fixture.application import Application
+import json
+import os.path
 
 fixture = None
+target = None
 
 @pytest.fixture
 def app(request):
     global fixture
+    global target
     browser = request.config.getoption("--browser")
-    base_url = request.config.getoption("--baseURL")
-    if fixture is None: #  to create first fixture
-        fixture = Application(browser=browser, base_url=base_url)
-    else:
-        if not fixture.is_valid():  # to check fixture's validity
-            fixture = Application(browser=browser, base_url=base_url) # if not, to create new one
-    fixture.session.ensure_login(username="admin", password="secret")
+    if target is None:
+        # определение директории проекта
+        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
+        with open(config_file) as f:
+            target = json.load(f)
+    if fixture is None or not fixture.is_valid(): #  to create first fixture
+        fixture = Application(browser=browser, base_url=target['baseURL'])
+    fixture.session.ensure_login(username=target['username'], password=target['password'])
     return fixture
 
 @pytest.fixture(scope='session', autouse=True) # only one time in the session's end, case of scope
@@ -26,4 +31,4 @@ def stop(request):                             # autouse for that procedure
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
-    parser.addoption("--baseURL", action="store", default="http://localhost/addressbook/index.php")
+    parser.addoption("--target", action="store", default="target.json")

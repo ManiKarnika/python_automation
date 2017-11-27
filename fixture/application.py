@@ -11,10 +11,10 @@ class Application:
             self.wd = webdriver.Firefox()
         elif browser == "chrome":
             self.wd = webdriver.Chrome()
-        elif browser == "ie":
-            pass #  on Mac there's no IE
+        elif browser == "safari":
+            self.wd = webdriver.Safari()
         elif browser == "opera":
-            self.wd = webdriver.Opera()
+            pass
         else:
             raise ValueError("Unrecognized browser %s" % browser)
         # self.wd.implicitly_wait(2)
